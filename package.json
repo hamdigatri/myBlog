@@ -4,8 +4,18 @@
   "description": "A blog web application uses ReactJs on the front-end and ExpressJs on the back-end",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "test"
   },
   "author": "hamdi gatri",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@okta/oidc-middleware": "^1.0.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "nodemon": "^1.19.0"
+  }
 }
