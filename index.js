@@ -10,6 +10,15 @@ const { ExpressOIDC } = require("@okta/oidc-middleware");
 const app = new express();
 const port = 3000;
 
+// session support is required to use ExpressOIDC
+app.use(
+  session({
+    secret: process.env.RANDOM_SECRET_WORD,
+    resave: true,
+    saveUninitialized: false
+  })
+);
+
 app.get("/", (req, res) => {
   res.send("<h1>Welcome!!</h1>");
 });
