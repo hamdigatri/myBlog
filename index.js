@@ -19,6 +19,23 @@ app.use(
   })
 );
 
+const oidc = new ExpressOIDC({
+  issuer: `${process.env.OKTA_ORG_URL}/oauth2/default`,
+  client_id: process.env.OKTA_CLIENT_ID,
+  client_secret: process.env.OKTA_CLIENT_SECRET,
+  redirect_uri: process.env.REDIRECT_URL,
+  scope: "openid profile",
+  routes: {
+    callback: {
+      path: "/authorization-code/callback",
+      defaultRedirect: "/admin"
+    }
+  }
+});
+app.use(oidc.router);
+app.use(cors());
+app.use(bodyParser.json());
+
 app.get("/", (req, res) => {
   res.send("<h1>Welcome!!</h1>");
 });
