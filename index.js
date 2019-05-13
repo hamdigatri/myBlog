@@ -40,4 +40,12 @@ app.get("/", (req, res) => {
   res.send("<h1>Welcome!!</h1>");
 });
 
+app.get("/home", (req, res) => {
+  res.send("<h1>Home!!</h1> <p>go to<a href='/login'> login </a></p>");
+});
+
+app.get("/admin", oidc.ensureAuthenticated(), (req, res) => {
+  res.send("Admin page");
+});
+
 app.listen(port, () => console.log(`listening to port ${port}`));
