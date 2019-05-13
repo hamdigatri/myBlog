@@ -59,3 +59,8 @@ const database = new Sequelize({
   storage: "./db.sqlite",
   operatorsAliases: false
 });
+
+const Post = database.define("posts", {
+  title: Sequelize.STRING,
+  content: Sequelize.TEXT
+});
