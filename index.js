@@ -64,3 +64,10 @@ const Post = database.define("posts", {
   title: Sequelize.STRING,
   content: Sequelize.TEXT
 });
+
+epilogue.initialize({ app, sequelize: database });
+
+const PostResource = epilogue.resource({
+  model: Post,
+  endpoints: ["/posts", "/posts/:id"]
+});
