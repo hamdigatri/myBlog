@@ -48,4 +48,9 @@ app.get("/admin", oidc.ensureAuthenticated(), (req, res) => {
   res.send("Admin page");
 });
 
+app.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect("/home");
+});
+
 app.listen(port, () => console.log(`listening to port ${port}`));
