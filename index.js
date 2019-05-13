@@ -6,7 +6,9 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const { ExpressOIDC } = require("@okta/oidc-middleware");
-
+const Sequelize = require("sequelize");
+const epilogue = require("epilogue"),
+  ForbiddenError = epilogue.Errors.ForbiddenError;
 const app = new express();
 const port = 3000;
 
