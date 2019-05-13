@@ -37,7 +37,20 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.send("<h1>Welcome!!</h1>");
+  res.redirect("/home");
+});
+
+app.get("/home", (req, res) => {
+  res.send("<h1>Home!!</h1> <p>go to<a href='/login'> login </a></p>");
+});
+
+app.get("/admin", oidc.ensureAuthenticated(), (req, res) => {
+  res.send("Admin page");
+});
+
+app.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect("/home");
 });
 
 app.listen(port, () => console.log(`listening to port ${port}`));
