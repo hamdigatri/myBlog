@@ -6,7 +6,9 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const { ExpressOIDC } = require("@okta/oidc-middleware");
-
+const Sequelize = require("sequelize");
+const epilogue = require("epilogue"),
+  ForbiddenError = epilogue.Errors.ForbiddenError;
 const app = new express();
 const port = 3000;
 
@@ -39,18 +41,55 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => {
   res.redirect("/home");
 });
-
 app.get("/home", (req, res) => {
   res.send("<h1>Home!!</h1> <p>go to<a href='/login'> login </a></p>");
 });
-
 app.get("/admin", oidc.ensureAuthenticated(), (req, res) => {
   res.send("Admin page");
 });
-
 app.get("/logout", (req, res) => {
   req.logout();
   res.redirect("/home");
 });
 
-app.listen(port, () => console.log(`listening to port ${port}`));
+const database = new Sequelize({
+  dialect: "sqlite",
+  storage: "./db.sqlite",
+  operatorsAliases: false
+});
+
+const Post = database.define("posts", {
+  title: Sequelize.STRING,
+  content: Sequelize.TEXT
+});
+
+epilogue.initialize({ app, sequelize: database });
+
+const PostResource = epilogue.resource({
+  model: Post,
+  endpoints: ["/posts", "/posts/:id"]
+});
+
+PostResource.all.auth(function(req, res, context) {
+  return new Promise(function(resolve, reject) {
+    if (!req.isAuthenticated()) {
+      res.status(401).send({ message: "Unauthorized" });
+      resolve(context.stop);
+    } else {
+      resolve(context.continue);
+    }
+  });
+});
+
+database.sync().then(() => {
+  oidc.on("ready", () => {
+    app.listen(port, () =>
+      console.log(`My Blog App listening on port ${port}!`)
+    );
+  });
+});
+
+oidc.on("error", err => {
+  // An error occurred while setting up OIDC
+  console.log("oidc error: ", err);
+});
