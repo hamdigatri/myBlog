@@ -37,7 +37,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.send("<h1>Welcome!!</h1>");
+  res.redirect("/home");
 });
 
 app.get("/home", (req, res) => {
