@@ -37,16 +37,19 @@ const oidc = new ExpressOIDC({
 app.use(oidc.router);
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
   res.redirect("/home");
 });
 app.get("/home", (req, res) => {
-  res.send("<h1>Home!!</h1> <p>go to<a href='/login'> login </a></p>");
+  res.sendFile(path.join(__dirname, "./public/home.html"));
 });
+
 app.get("/admin", oidc.ensureAuthenticated(), (req, res) => {
-  res.send("Admin page");
+  res.sendFile(path.join(__dirname, "./public/admin.html"));
 });
+
 app.get("/logout", (req, res) => {
   req.logout();
   res.redirect("/home");
